@@ -108,7 +108,7 @@ def get_week_schedule_by_rows(link, group_id=None, staff_id=None, week_number=No
 
 def get_current_week_parse(link="https://ssau.ru/rasp", group_id=None):
     if not group_id:
-        with open(r"backend/groups_and_staff.json", "r", encoding='utf-8') as file:
+        with open(r"groups_and_staff.json", "r", encoding='utf-8') as file:
             data = json.loads(file.read())
             groups = data['groups']
             group_id = groups[0]['id']

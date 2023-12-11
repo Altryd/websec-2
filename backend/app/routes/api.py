@@ -20,7 +20,7 @@ def search_group():
         group_substr = args['group']
     else:
         group_substr = None
-    with open(r"backend/groups_and_staff.json", "r", encoding='utf-8') as file:
+    with open(r"groups_and_staff.json", "r", encoding='utf-8') as file:
         data = json.loads(file.read())
         groups = data['groups']
     if group_substr:
@@ -35,7 +35,7 @@ def search_staff():
         fio_substr = args['fio']
     else:
         fio_substr = None
-    with open(r"backend/groups_and_staff.json", "r", encoding='utf-8') as file:
+    with open(r"groups_and_staff.json", "r", encoding='utf-8') as file:
         data = json.loads(file.read())
         staff = data['staff']
     if fio_substr:
@@ -61,7 +61,6 @@ def get_schedule():
     if not staffId and not groupId:
         return jsonify([]), 200, {"Content-Type": "application/json"}
     rows = get_week_schedule_by_rows("https://ssau.ru/rasp", group_id=groupId, staff_id=staffId, week_number=week)
-    print(rows)
     return jsonify(rows), 200, {"Content-Type": "application/json"}
 
 
