@@ -145,6 +145,7 @@ def get_week_schedule_by_rows(link, group_id, week_number):
     heads_list = []
     for schedule_head_item in schedule_head:
         schedule__text = schedule_head_item.text[1:] if len(schedule_head_item.text) > 0 else schedule_head_item.text
+        schedule__text = "\n".join(schedule__text.split(" "))
         heads_list.append({"text": schedule__text})
     rows.append({"row_data": heads_list})
 
@@ -155,6 +156,14 @@ def get_week_schedule_by_rows(link, group_id, week_number):
         list_to_add = [{"text":schedule_time_text}]
         while sibling and 'schedule__time' not in sibling.attrs['class']:
             sibling_text = sibling.text[1:] if len(sibling.text) > 0 else sibling.text
+            if len(sibling_text) > 1:
+                sibling_soup = BeautifulSoup(str(sibling), "html.parser")
+                schedule_place = sibling_soup.findAll("div", class_="schedule__place")
+                if schedule_place:
+                    schedule_place_text = schedule_place[0].text[1:]
+                    sibling_text = sibling_text.replace(schedule_place_text, "  " + schedule_place_text)
+            sibling_text = "\n".join(sibling_text.split("  "))
+            print(sibling_text)
             list_to_add.append({"text": sibling_text})
             sibling = sibling.next_sibling
             day += 1
