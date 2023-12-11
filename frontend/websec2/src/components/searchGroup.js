@@ -31,7 +31,6 @@ class SearchGroup extends React.Component {
         this.handleClick = this.handleClick.bind(this);
     }
     getData = () => {
-        console.log(this.props);
         let URL = `http://localhost:5000/api/search_group?group=${this.state.query}`;
         axios.get(URL)
         .then(response => response.data)

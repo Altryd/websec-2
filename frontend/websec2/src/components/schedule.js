@@ -6,7 +6,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 class Schedule extends React.Component{
     static defaultProps;
     async getData() {
-        // let table_rows = [];
         let apiUrl = `http://localhost:5000/api/get_week_schedule?week=${this.state.current_week}`;
         if (this.state.staffId != null)
         {
@@ -17,14 +16,12 @@ class Schedule extends React.Component{
             apiUrl += `&groupId=${this.state.groupId}`;
         }
         const res = await axios(apiUrl);
-        console.log(res);
-        return await res.data; // (Or whatever)
+        return await res.data;
     }
     async getCurrentWeek() {
         const apiUrl = `http://localhost:5000/api/get_current_week`;
         const res = await axios(apiUrl);
-        console.log(res);
-        return await res.data.current_week; // (Or whatever)
+        return await res.data.current_week;
     }
     prevWeek() {
         
@@ -55,7 +52,6 @@ class Schedule extends React.Component{
     }
     constructor(props) {
         super(props);
-        console.log(props);
         this.state = {data: null, current_week: null, staffId: null};
         this.prevWeek = this.prevWeek.bind(this);
         this.nextWeek = this.nextWeek.bind(this);
@@ -76,7 +72,6 @@ class Schedule extends React.Component{
             (async () => {
                 try {
                     await this.setState({current_week: await this.getCurrentWeek()});
-                    // console.log(`current week: ${this.state.current_week}`);
                     if (this.state.current_week)
                         {
                         try {
@@ -86,48 +81,24 @@ class Schedule extends React.Component{
                         }
                     }
                 } catch (e) {
-                    //...handle the error...
-                }
-            })();
-        }
-    }
-    componentWillReceiveProps(nextProps) {
-        if (this.props !== nextProps)
-        {
-            (async () => {
-                try {
-                    await this.setState({current_week: await this.getCurrentWeek()});
-                    // console.log(`current week: ${this.state.current_week}`);
-                    if (this.state.current_week)
-                        {
-                        try {
-                            this.setState({data: await this.getData()});
-                        } catch (e) {
-                            //...handle the error...
-                        }
-                    }
-                } catch (e) {
-                    //...handle the error...
+                    this.setState({current_week: 1});
                 }
             })();
         }
     }
 
     render() {
-        console.log(this.state);
-        console.log(this.props);
-        console.log(this.state.data? "null" : "hi");
         return (
-            <div  class="schedule">
+            <div  className="schedule">
 
                 {(this.state.data === undefined || this.state.data === null || this.state.data.constructor !== Array) ? <em>Загрузка...</em> : 
                 <div >
 
                     {(this.state.current_week == null) ?  <em>Определение недели..</em> : 
-                        <div class="test_week_div">
-                            <button class="btn btn-info" onClick={this.prevWeek}>Предыдущая неделя</button>
-                            <span class="current_week">{this.state.current_week} неделя</span>
-                            <button class="btn btn-info" onClick={this.nextWeek}>Следующая неделя</button>
+                        <div className="test_week_div">
+                            <button className="btn btn-info" onClick={this.prevWeek}>Предыдущая неделя</button>
+                            <span className="current_week">{this.state.current_week} неделя</span>
+                            <button className="btn btn-info" onClick={this.nextWeek}>Следующая неделя</button>
                         </div>
                         }
                     <table >
@@ -136,7 +107,7 @@ class Schedule extends React.Component{
                         this.state.data.map((element, row_index) =>
                         <tr key={row_index} className={`${row_index === 0? "schedule_head": ""}`}>{
                           element.row_data.map((elem_td) =>
-                          <td class="schedule_item">
+                          <td key={elem_td.id} className="schedule_item">
                               {elem_td.text}  
                           </td>
                           )

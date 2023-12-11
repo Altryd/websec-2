@@ -1,7 +1,6 @@
 class Config(object):
     DEBUG = False
     TESTING = False
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:password@localhost/mil2?charset=utf8mb4"
 
 
 class ProductionConfig(Config):
