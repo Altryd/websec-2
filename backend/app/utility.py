@@ -2,6 +2,8 @@ import requests
 import re
 from bs4 import BeautifulSoup
 import json
+import re
+
 
 def bruteforce_staff_id(id_start=0, id_end=61141001):
 
@@ -131,8 +133,17 @@ def get_week_schedule(link, group_id, week_number):
     return schedule_time_and_head_dict
 
 
-def get_week_schedule_by_rows(link, group_id, week_number):
-    path = link + f"?groupId={group_id}&selectedWeek={week_number}"
+def get_week_schedule_by_rows(link, group_id=None, staff_id=None, week_number=None):
+    # path = link + f"?groupId={group_id}&selectedWeek={week_number}"
+    path = link
+    if group_id:
+        path = path + f"?groupId={group_id}"
+    elif staff_id:
+        path = path + f"?staffId={staff_id}"
+    if group_id or staff_id:
+        path = path + f"&selectedWeek={week_number}"
+    else:
+        path = path + f"?selectedWeek={week_number}"
     response = requests.get(path)
     if response.status_code >= 300:
         print(f"CANNOT PARSE WEEK SCHEDULE FOR GROUP {group_id} week {week_number}")
@@ -163,14 +174,33 @@ def get_week_schedule_by_rows(link, group_id, week_number):
                     schedule_place_text = schedule_place[0].text[1:]
                     sibling_text = sibling_text.replace(schedule_place_text, "  " + schedule_place_text)
             sibling_text = "\n".join(sibling_text.split("  "))
-            print(sibling_text)
+            # print(sibling_text)
             list_to_add.append({"text": sibling_text})
             sibling = sibling.next_sibling
             day += 1
         rows.append({"row_data": list_to_add})
-    print(schedule_time_and_head_dict)
+    # print(schedule_time_and_head_dict)
     return rows
 
+
+def get_current_week_parse(link="https://ssau.ru/rasp", group_id=None):
+    if not group_id:
+        with open(r"backend/groups_and_staff.json", "r", encoding='utf-8') as file:
+            data = json.loads(file.read())
+            groups = data['groups']
+            group_id = groups[0]['id']
+    path = link + f"?groupId={group_id}"
+    response = requests.get(path)
+    if response.status_code >= 300:
+        print(f"can not parse current week for group {group_id}")
+        return None
+    soup = BeautifulSoup(response.text, "html.parser")
+    current_week = soup.find('span', class_="week-nav-current_week")
+    current_week_number = re.findall(r"\d+", current_week.text)
+    if len(current_week_number) < 1:
+        return None
+    # current_week_number = re.match("")
+    return current_week_number[0]
 
 
 if __name__ == "__main__":

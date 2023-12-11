@@ -3,7 +3,7 @@ import os
 import flask
 import json
 from flask import request, Blueprint, jsonify
-from app.utility import get_week_schedule_by_rows
+from app.utility import get_week_schedule_by_rows, get_current_week_parse
 
 
 api_routes = Blueprint('api_routes', __name__, template_folder='templates', url_prefix="/api")
@@ -26,6 +26,7 @@ def search_group():
         groups = data['groups']
     if group_substr:
         groups = list(filter(lambda group: group_substr in group['group'], groups))
+    pagination_ = 10
     return jsonify(groups), 200, {"Content-Type": "application/json"}
 
 
@@ -49,5 +50,33 @@ def search_staff():
 @api_routes.route('/get_week_schedule', methods=['GET'])
 def get_schedule():
     args = request.args
-    test = get_week_schedule_by_rows("https://ssau.ru/rasp", 531030143, 14)
-    return jsonify(test), 200, {"Content-Type": "application/json"}
+    if "week" in args:
+        week = args['week']
+    else:
+        week = get_current_week_parse()
+    if "groupId" in args:
+        groupId = args['groupId']
+    else:
+        groupId = None
+    if "staffId" in args:
+        staffId = args['staffId']
+    else:
+        staffId = None
+    if not staffId and not groupId:
+        groupId = 531030143
+
+    print(f"week: {week}")
+    rows = get_week_schedule_by_rows("https://ssau.ru/rasp", group_id=groupId, staff_id=staffId, week_number=week)
+    return jsonify(rows), 200, {"Content-Type": "application/json"}
+
+
+from time import sleep
+@api_routes.route('/get_current_week', methods=['GET'])
+def get_current_week():
+    args = request.args
+    current_week = get_current_week_parse()
+    if current_week:
+        return jsonify({"current_week": current_week}), 200, {"Content-Type": "application/json"}
+    else:
+        return jsonify({"current_week": None}), 404, {"Content-Type": "application/json"}
+
