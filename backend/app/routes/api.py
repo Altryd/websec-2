@@ -63,9 +63,9 @@ def get_schedule():
     else:
         staffId = None
     if not staffId and not groupId:
-        groupId = 531030143
+        return jsonify([]), 200, {"Content-Type": "application/json"}
 
-    print(f"week: {week}")
+    # print(f"week: {week}")
     rows = get_week_schedule_by_rows("https://ssau.ru/rasp", group_id=groupId, staff_id=staffId, week_number=week)
     return jsonify(rows), 200, {"Content-Type": "application/json"}
 

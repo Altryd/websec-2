@@ -163,7 +163,7 @@ def get_week_schedule_by_rows(link, group_id=None, staff_id=None, week_number=No
     for row_id, schedule_time in enumerate(schedule_times):
         day = 0
         sibling = schedule_time.next_sibling
-        schedule_time_text = schedule_time.text[1:] if len(schedule_time.text) > 0 else schedule_time.text
+        schedule_time_text = schedule_time.text[1:-1] if len(schedule_time.text) > 0 else schedule_time.text
         list_to_add = [{"text":schedule_time_text}]
         while sibling and 'schedule__time' not in sibling.attrs['class']:
             sibling_text = sibling.text[1:] if len(sibling.text) > 0 else sibling.text
