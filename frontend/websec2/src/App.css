@@ -1,0 +1,55 @@
+.App {
+  text-align: center;
+  min-width: 200px;
+}
+
+
+.schedule_item {
+  border: 1px solid #a6d5fa;
+  padding: .5rem;
+  white-space: pre-wrap;
+}
+
+.schedule_head {
+  font-weight: bold;
+}
+
+
+.current_week {
+  font-weight: bold;
+  color: #2780e3;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.schedule {
+  margin: 3px;
+  display: flex;
+  /*justify-content: center;*/
+  align-items: center;
+}
+
+.test_week_div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin: 0 auto;
+  padding-bottom: 5px;
+  align-items: center;
+}
+
+.searchResults {
+  width: 80%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.searchElement {
+  margin: 15px auto;
+  padding: 3px;
+}
+label
+{
+  margin-right: 5px;
+  padding-right: 5px;
+}
